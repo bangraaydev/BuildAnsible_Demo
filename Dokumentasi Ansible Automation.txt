@@ -1,0 +1,129 @@
+
+==========================================================================
+
+client_5		: 188.166.227.26		=> remote host 5	=> ubuntu
+client_4		: 128.199.157.181		=> remote host 4	=> ubuntu
+client_3		: 128.199.106.101		=> remote host 3
+client_2 		: 128.199.222.134    	=> remote host 2	=> ubuntu
+client_1 		: 128.199.216.131		=> remote host 1
+
+Local Hosts 	: 128.199.130.44
+==========================================================================
+
+1- install repository centos 7
+$ yum install epel-release
+
+2- install pip dan git
+$ yum install python-pip python-devel git
+
+3- install ansible
+$ yum install ansible
+
+4- jika install pakai pip
+$ pip install ansible
+
+5- Membuat Inventory File (semua IP/Domain server yang diremote disimpan disini )
+
+$ nano /etc/ansible/hosts
+
+//tambahkan baris seperti dibawah ini
+-----------------------------
+
+[webservers]
+128.199.216.131
+128.199.106.101
+
+[serverproxy_debian]
+128.199.222.134
+
+[percobaan]
+128.199.157.181
+188.166.227.26
+
+-----------------------------
+
+//anda bisa membuat group, mempunyai multiple server dan multiple group
+anda bisa menggunakan IP/Domain, dibawah saya membuat dua group 
+([webservers] dan [serverproxy_debian])
+
+
+6- Membuat SSH Key menggunakan ssh-keygen command
+$ ssh-keygen -t rsa -b 4096 -C "root@128.199.130.44"
+
+//jika passphrase ingin dikosongkan (langsung tekan [enter])
+//untuk menjalankan modul atau playbook dari 
+//To run any module or playbook  from local host to remote host, we need to create and copy ssh keys to remote hosts by using ssh-keygen and ssh-copy-id.
+
+
+7. copy ssh-key ke remote host(client1) menggunakan ssh-copy-id command
+$ ssh-copy-id root@128.199.216.131
+
+8. copy ssh-key ke remote host(client2) menggunakan ssh-copy-id command
+$ ssh-copy-id root@128.199.222.134
+
+9. copy ssh-key ke remote host(client3) menggunakan ssh-copy-id command
+$ ssh-copy-id root@128.199.106.101
+
+10. copy ssh-key ke remote host(client4) menggunakan ssh-copy-id command
+$ ssh-copy-id root@128.199.157.181
+
+11. copy ssh-key ke remote host(client5) menggunakan ssh-copy-id command
+$ ssh-copy-id root@188.166.227.26
+
+
+12. Ansible Module
+// module ansible dapat eksekusi langsung pada remote host atau melalui
+playbooks.
+//pengguna juga dapat menulis modul sendiri, modul ini dapat mengendalikan sumber daya sistem, seperti layanan, paket, file, atau 
+menangani untuk mengeksekusi perintah sistem
+
+//kita bisa ping semua hosts yang ada di dalam inventory file, menggunakan perintah :
+
+$ ansible all -m ping
+
+//anda juga bisa menjalankan semua remote hosts yang ada di dalam group
+
+$ ansible webservers -m command -a "ls"
+$ ansible webservers -m command -a "uptime"
+$ ansible webservers -m command -a "who"
+
+
+
+======================================================================================
+
+======= Ansible Playbooks ========
+
+//setelah pengaturan diatas dan semua sudah terkoneksi ke semua remote hosts
+//sekarang kita akan belajar mengenai Ansible Playbooks, dengan menggunakan Ansible Playbooks kita dapat menginstall aplikasi (nginx,ufw,etc) ke semua server hosts secara bersamaan dengan sangat cepat. langkahnya sebagai berikut : 
+
+1. Buat file provision.yml
+//semua file sudah ada di dalam folder, konfigurasi sudah diuji dan berhasil
+
+2. Menjalankan Ansible Playbooks
+$ ansible-playbook provision.yml
+
+3. Tunggu sampai proses selesai
+
+
+
+----- Congratulations -----
+
+
+
+
+
+
+
+
+
+
+Source :
+
+https://deliciousbrains.com/automating-server-setup-ansible/
+
+http://docs.ansible.com/ansible/faq.html#how-do-i-generate-crypted-passwords-for-the-user-module
+
+https://viewsby.wordpress.com/2014/11/14/ansible-create-user-with-password-in-ubuntulinux/
+
+//file .YML bisa di encrypt dan decrypt
+http://docs.ansible.com/ansible/playbooks_vault.html

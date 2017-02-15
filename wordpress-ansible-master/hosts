@@ -1,0 +1,8 @@
+# Add hosts here, one per line. Additional groups can be created using
+# [group] syntax. Hosts can join multiple groups.
+
+
+
+[percobaan]
+128.199.157.181
+188.166.227.26

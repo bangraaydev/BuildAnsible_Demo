@@ -1,0 +1,17 @@
+
+---
+- hosts: percobaan
+  user: root
+  vars:
+    username: raden
+    password: $6$SQkAY95W0
+    public_key: ~/.ssh/id_rsa.pub
+  roles:
+   - common
+   - ufw
+   - user
+   - nginx
+   - php
+   - mariadb
+   - wp-cli
+   - ssh
